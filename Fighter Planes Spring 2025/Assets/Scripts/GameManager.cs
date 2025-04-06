@@ -1,17 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject enemyonePrefab;
-    public GameObject enemytwoPrefab;
+
+    public GameObject playerPrefab;
+    public GameObject enemyOnePrefab;
+    public GameObject cloudPrefab;
+
+    public TextMeshProUGUI livesText;
+    public TextMeshProUGUI scoreText;
+
+    public float horizontalScreenSize;
+    public float verticalScreenSize;
+
+    public int score; 
 
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("Createenemyone", 1, 2);
-        InvokeRepeating("Createenemytwo", 4, 7);
+        horizontalScreenSize = 9.6f;
+        verticalScreenSize = 6.5f;
+        score = 0;
+        ChangeScoreText(score);
+        Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        CreateSky();
+        InvokeRepeating("CreateEnemy", 1, 3);
     }
 
     // Update is called once per frame
@@ -20,14 +37,34 @@ public class GameManager : MonoBehaviour
         
     }
 
-    // Define Createenemyone() as a separate method within the class
-    void Createenemyone()
+    void CreateEnemy()
     {
-        Instantiate(enemyonePrefab, new Vector3(Random.Range(-9f, 9f), 6.5f, 0), Quaternion.identity);
+        Instantiate(enemyOnePrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize)
+            * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
     }
-    void Createenemytwo()
+
+    void CreateSky()
     {
-        Instantiate(enemytwoPrefab, new Vector3(Random.Range(-9f, 9f), 6.5f, 0), Quaternion.identity);
+       for (int i = 0; i < 30; i++)
+        {
+            Instantiate(cloudPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize),
+           Random.Range(-verticalScreenSize, verticalScreenSize), 0), Quaternion.identity);
+        }
+    }
+
+    public void AddScore(int earnedScore)
+    {
+        score += earnedScore;
+        ChangeScoreText(score);
+    }
+
+    public void ChangeScoreText (int earnedScore)
+    {
+        scoreText.text = "Score: " + earnedScore;
+    }
+    public void ChangeLivesText (int currentlives)
+    {
+        livesText.text = "Lives: " + currentlives;
     }
 
 }
