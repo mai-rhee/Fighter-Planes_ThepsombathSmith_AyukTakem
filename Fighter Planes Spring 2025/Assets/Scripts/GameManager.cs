@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject enemyOnePrefab;
+    public GameObject enemytwooPrefab;
     public GameObject cloudPrefab;
+    public GameObject coinPrefab;
 
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI scoreText;
@@ -17,7 +19,7 @@ public class GameManager : MonoBehaviour
     public float horizontalScreenSize;
     public float verticalScreenSize;
 
-    public int score; 
+    public int score;
 
     // Start is called before the first frame update
     void Start()
@@ -29,12 +31,14 @@ public class GameManager : MonoBehaviour
         Instantiate(playerPrefab, transform.position, Quaternion.identity);
         CreateSky();
         InvokeRepeating("CreateEnemy", 1, 3);
+        InvokeRepeating("CreateEnemyTwoo", 2, 8);
+        InvokeRepeating("CreateCoin", 14, 19);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void CreateEnemy()
@@ -43,9 +47,20 @@ public class GameManager : MonoBehaviour
             * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
     }
 
+    void CreateEnemyTwoo()
+    {
+        Instantiate(enemytwooPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize)
+            * 0.5f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+
+    void CreateCoin()
+    {
+        Instantiate(coinPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize)
+             * 0.5f, verticalScreenSize, 0), Quaternion.identity);
+    }
     void CreateSky()
     {
-       for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 30; i++)
         {
             Instantiate(cloudPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize),
            Random.Range(-verticalScreenSize, verticalScreenSize), 0), Quaternion.identity);
@@ -58,11 +73,11 @@ public class GameManager : MonoBehaviour
         ChangeScoreText(score);
     }
 
-    public void ChangeScoreText (int earnedScore)
+    public void ChangeScoreText(int earnedScore)
     {
         scoreText.text = "Score: " + earnedScore;
     }
-    public void ChangeLivesText (int currentlives)
+    public void ChangeLivesText(int currentlives)
     {
         livesText.text = "Lives: " + currentlives;
     }
