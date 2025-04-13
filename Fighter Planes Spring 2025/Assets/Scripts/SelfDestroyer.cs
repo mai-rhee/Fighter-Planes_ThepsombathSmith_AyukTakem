@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Explosion : MonoBehaviour
+public class SelfDestroyer : MonoBehaviour
 {
+
+    public float destructionTime;
+
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(this.gameObject, 2.5f);
+        Destroy(this.gameObject, destructionTime);
     }
 
     // Update is called once per frame

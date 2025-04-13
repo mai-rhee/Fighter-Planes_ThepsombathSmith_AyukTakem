@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject bulletPrefab;
     public GameObject explosionPrefab;
+    public GameObject shieldPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -33,16 +34,48 @@ public class PlayerController : MonoBehaviour
         Shooting();
     }
 
+ 
     public void LoseALife()
     {
+            Debug.Log("Shield Active? " + shieldPrefab.activeSelf);
+
+        if (shieldPrefab.activeSelf)
+        {
+            Debug.Log("Shield blocked the hit!");
+
+            shieldPrefab.SetActive(false);
+            return;
+        }
         //lives = lives - 1;
         //lives -= 1;
-        lives--;
-        gameManager.ChangeLivesText(lives);
-        if(lives == 0)
-        {
+       
+         lives--;
+         gameManager.ChangeLivesText(lives);
+
+         Debug.Log("Lost a life. Lives left: " + lives);
+
+         if (lives == 0)
+         {
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            gameManager.GameOver();
             Destroy(this.gameObject);
+            return;
+         }
+
+}
+
+
+    private void OnTriggerEnter2D(Collider2D whatDidIHit)
+    {
+        if (whatDidIHit.CompareTag("PowerUp"))
+        {
+            Destroy(whatDidIHit.gameObject);
+            //Shield
+            shieldPrefab.SetActive(true);
+        }
+        if (whatDidIHit.CompareTag("Enemy"))
+        {
+            LoseALife();
         }
     }
 
