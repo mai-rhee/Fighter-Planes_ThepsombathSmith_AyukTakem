@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverText;
     public GameObject restartText;
     public GameObject powerupPrefab;
+    public GameObject audioPlayer;
+
+    public AudioClip powerupSound;
+    public AudioClip powerdownSound;
 
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI scoreText;
@@ -47,6 +51,7 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("CreateCoin", 14, 19);
         StartCoroutine(SpawnPowerup());
         powerupText.text = "No powerups yet!";
+        
     }
 
     // Update is called once per frame
@@ -73,7 +78,7 @@ public class GameManager : MonoBehaviour
     void CreatePowerup()
     {
         Instantiate(powerupPrefab, new Vector3(Random.Range(-horizontalScreenSize * 0.8f, horizontalScreenSize * 0.8f),
-            Random.Range(-verticalScreenSize * 0.8f, verticalScreenSize * 0.8f), 0), Quaternion.identity);
+            Random.Range(-verticalScreenSize * 0.35f, verticalScreenSize * .01f), 0), Quaternion.identity);
     }
 
     void CreateCoin()
@@ -101,6 +106,19 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(spawnTime);
         CreatePowerup();
         StartCoroutine(SpawnPowerup());
+    }
+
+    public void PlaySound(int whichSound)
+    {
+        switch (whichSound)
+        {
+            case 1:
+                audioPlayer.GetComponent<AudioSource>().PlayOneShot(powerupSound);
+                break;
+            case 2:
+                audioPlayer.GetComponent<AudioSource>().PlayOneShot(powerdownSound);
+                break;
+        }
     }
 
     public void AddScore(int earnedScore)

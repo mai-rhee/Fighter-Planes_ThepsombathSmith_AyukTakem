@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
@@ -13,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalInput;
     private float verticalInput;
+
+    private bool shieldActive = false;
 
     public GameObject bulletPrefab;
     public GameObject explosionPrefab;
@@ -37,22 +40,23 @@ public class PlayerController : MonoBehaviour
  
     public void LoseALife()
     {
-            Debug.Log("Shield Active? " + shieldPrefab.activeSelf);
-
-        if (shieldPrefab.activeSelf)
+        if (shieldActive == true) 
         {
-            Debug.Log("Shield blocked the hit!");
-
+            shieldActive = false;
+            gameManager.PlaySound(2);
             shieldPrefab.SetActive(false);
             return;
         }
         //lives = lives - 1;
         //lives -= 1;
-       
-         lives--;
-         gameManager.ChangeLivesText(lives);
+        else if (shieldActive == false)
+        {
+            lives--;
+            shieldPrefab.SetActive(false);
+            gameManager.ChangeLivesText(lives);
 
-         Debug.Log("Lost a life. Lives left: " + lives);
+            Debug.Log("Lost a life. Lives left: " + lives);
+        }
 
          if (lives == 0)
          {
@@ -64,19 +68,17 @@ public class PlayerController : MonoBehaviour
 
 }
 
-
     private void OnTriggerEnter2D(Collider2D whatDidIHit)
     {
         if (whatDidIHit.CompareTag("PowerUp"))
         {
             Destroy(whatDidIHit.gameObject);
+            gameManager.PlaySound(1);
             //Shield
+            shieldActive = true;
             shieldPrefab.SetActive(true);
         }
-        if (whatDidIHit.CompareTag("Enemy"))
-        {
-            LoseALife();
-        }
+
     }
 
     void Shooting()
